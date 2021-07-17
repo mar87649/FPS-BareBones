@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +33,8 @@ public class PlayerActions : MonoBehaviour
     {
         Jump();
         Crouch();
-        Sprint(sprintModifier);
+        Sprint();
+        QuickAttack();
     }
     private void Jump()
     {
@@ -79,7 +81,7 @@ public class PlayerActions : MonoBehaviour
             isCrouched = false;
         }
     }
-    private void Sprint(float sprintModifier)
+    private void Sprint()
     {
         if (sprintModifier <= 0)
         {
@@ -107,4 +109,47 @@ public class PlayerActions : MonoBehaviour
             isSprinting = false;
         }
     }
+    private void QuickAttack()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            //ToDo - Create Quickattack Event to subscribe to 
+        }
+    }
+    private void MovementAbility()
+    {
+/*        if (Input.GetKeyDown(KeyCode.V))
+        {
+            //ToDo - Create MovementAbility Event to subscribe to 
+        }*/
+    }
+    private void HealingAbility()
+    {
+        /*        if (Input.GetKeyDown(KeyCode.V))
+                {
+                    //ToDo - Create HealingAbility Event to subscribe to 
+                }*/
+    }
+    private void DefenceAbility()
+    {
+        /*        if (Input.GetKeyDown(KeyCode.V))
+                {
+                    //ToDo - Create DefenceAbility Event to subscribe to 
+                }*/
+    }
+    private void OffenceAbility()
+    {
+        /*        if (Input.GetKeyDown(KeyCode.V))
+                {
+                    //ToDo - Create OffenceAbility Event to subscribe to 
+                }*/
+    }
+    private void UltimateAbility()
+    {
+        /*        if (Input.GetKeyDown(KeyCode.V))
+                {
+                    //ToDo - Create UltimateAbility Event to subscribe to 
+                }*/
+    }
 }
+
