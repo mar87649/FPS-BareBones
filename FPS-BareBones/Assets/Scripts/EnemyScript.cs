@@ -1,17 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class Test : MonoBehaviour
+public class EnemyScript : UnitScript
 {
     [SerializeField] private float health;
     public float Health { get => health; set => health = value; }
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     public void Takedamage(float amount)
     {
 
@@ -21,7 +15,6 @@ public class Test : MonoBehaviour
             Die();
         }
     }
-
     private void Die()
     {
         Destroy(gameObject);

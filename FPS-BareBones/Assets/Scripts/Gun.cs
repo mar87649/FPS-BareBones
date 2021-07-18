@@ -87,7 +87,7 @@ public class Gun : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(PovCam.transform.position, PovCam.transform.forward, out hit, Range))
         {
-            Target target = hit.transform.GetComponent<Target>();
+            EnemyScript target = hit.transform.GetComponent<EnemyScript>();
             if (target != null)
             {
                 target.Takedamage(Damage);

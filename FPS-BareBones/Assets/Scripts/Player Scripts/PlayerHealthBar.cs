@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthbarScript : MonoBehaviour
+public class PlayerHealthBar : MonoBehaviour
 {
     private Slider slider;
     [SerializeField]private GameObject player;
@@ -13,16 +13,13 @@ public class HealthbarScript : MonoBehaviour
     void Start()
     {
         slider = GetComponent<Slider>();
-        playerHealth = player.GetComponent<PlayerStats>().Health;
+        playerHealth = player.GetComponent<PlayerScript>().Health;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(playerHealth);
-        Debug.Log(slider.value);
-
-        playerHealth = player.GetComponent<PlayerStats>().Health;
+        playerHealth = player.GetComponent<PlayerScript>().Health;
         slider.value = playerHealth;
     }
 }
