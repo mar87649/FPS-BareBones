@@ -15,8 +15,23 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 10f;
     private float verticalLook = 0f;
     [SerializeField] private float speed;
-    float mouseX, mouseY;
+    private InputAsset controls;
+    private Vector2 direction;
 
+    private void Awake()
+    {
+        controls = new InputAsset();
+        controls.Player.Movement.performed += e => direction = e.ReadValue<Vector2>();
+        controls.Player.Movement.canceled += e => direction = Vector2.zero;
+    }
+    private void OnEnable()
+    {
+        controls.Enable();
+    }
+    private void OnDisable()
+    {
+        controls.Disable();
+    }
     void Start()
     {
         
@@ -30,14 +45,10 @@ public class PlayerMovement : MonoBehaviour
     ///<summary>
     private void MovePlayer()
     {
-        if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
-        {
-            // move forward and backward along X and Z axis
-            Vector3 movementVertical = Vector3.Scale(cameraView.transform.forward * Input.GetAxis("Vertical"), new Vector3(1, 0, 1));
-            transform.position += movementVertical * Speed * Time.deltaTime;
-            //move left or right according to look direction
-            Vector3 movementHorizontal = Vector3.Scale(cameraView.transform.right * Input.GetAxis("Horizontal"), new Vector3(1, 0, 1));
-            transform.position += movementHorizontal * Speed * Time.deltaTime;
-        }
+        Vector3 movementVertical = Vector3.Scale(cameraView.transform.forward * direction.y, new Vector3(1, 0, 1));
+        transform.position += movementVertical * Speed * Time.deltaTime;
+
+        Vector3 movementHorizontal = Vector3.Scale(cameraView.transform.right * direction.x, new Vector3(1, 0, 1));
+        transform.position += movementHorizontal * Speed * Time.deltaTime;
     }
 }

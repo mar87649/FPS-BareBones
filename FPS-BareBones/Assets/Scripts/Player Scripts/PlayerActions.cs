@@ -15,8 +15,41 @@ public class PlayerActions : MonoBehaviour
     [SerializeField] private float sprintModifier;
 
 
+    private InputAsset controls;
     private Vector3 crouchedVector;
     private Vector3 standingVector;
+    private float sprintSpeed;
+    private float walkSpeed;
+
+    private void Awake()
+    {
+        controls = new InputAsset();
+        //controls.Player.Attack1.performed += e =>  
+        controls.Player.Jump.performed += e => Jump();
+        controls.Player.Crouch.performed += e => Crouch();
+        controls.Player.Crouch.canceled += e => Stand();
+        controls.Player.Sprint.performed += e => Sprint();
+        controls.Player.Sprint.canceled += e => Walk();
+        controls.Player.QuickAttack.performed += e => QuickAttack();
+        controls.Player.MovementAbility.performed += e => MovementAbility();
+        controls.Player.OffenceAbility.performed += e => OffenceAbility();
+        controls.Player.DefenceAbility.performed += e => DefenceAbility();
+        controls.Player.HealingAbility.performed += e => HealingAbility();
+        controls.Player.UltimateAbility.performed += e => UltimateAbility();
+        controls.Player.Attack1.performed += e => Attack1();
+        controls.Player.Attack2.performed += e => Attack2();
+        controls.Player.Attack2.canceled += e => Attack2();
+
+
+    }
+    private void OnEnable()
+    {
+        controls.Enable();
+    }
+    private void OnDisable()
+    {
+        controls.Disable();
+    }
     void Start()
     {
         playerRB = GetComponent<Rigidbody>();
@@ -26,19 +59,17 @@ public class PlayerActions : MonoBehaviour
         playerRB.AddForce(Vector3.down);
         crouchedVector = Vector3.Scale(playerObject.transform.localScale, new Vector3(1f, .5f, 1f));
         standingVector = Vector3.Scale(playerObject.transform.localScale, new Vector3(1f, 1f, 1f));
-
-    }
+        walkSpeed = GetComponent<PlayerMovement>().Speed;
+        sprintSpeed = GetComponent<PlayerMovement>().Speed * sprintModifier;
+     }
 
     void Update()
     {
-        Jump();
-        Crouch();
-        Sprint();
-        QuickAttack();
+
     }
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isOnGround)
+        if (isOnGround)
         {
             playerRB.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isOnGround = false;
@@ -58,98 +89,65 @@ public class PlayerActions : MonoBehaviour
     }
     private void Crouch()
     {
-        //CROUCH TOGGLE
-        /*        if (Input.GetKeyDown(KeyCode.LeftControl) && isCrouched == false)
-                {
-                    playerObject.transform.localScale = crouchedVector;
-                    isCrouched = true;
-                }
-                else if (Input.GetKeyDown(KeyCode.LeftControl) && isCrouched == true)
-                {
-                    playerObject.transform.localScale = standingVector;
-                    isCrouched = false;
-                }*/
-
-        if (Input.GetKey(KeyCode.LeftControl) && isCrouched == false)
-        {
-            playerObject.transform.localScale = crouchedVector;
-            isCrouched = true;
-        }
-        else if (!Input.GetKey(KeyCode.LeftControl) && isCrouched == true)
-        {
-            playerObject.transform.localScale = standingVector;
-            isCrouched = false;
-        }
+        Walk();
+        playerObject.transform.localScale = crouchedVector;
+    }
+    private void Stand() 
+    {
+        playerObject.transform.localScale = standingVector;
     }
     private void Sprint()
     {
-        if (sprintModifier <= 0)
-        {
-            sprintModifier = 1;
-        }
-        //SPRINT TOGGLE
-        /*        if (Input.GetKeyDown(KeyCode.LeftShift) && isSprinting == false)
-                {
-                    GetComponent<PlayerMovement>().speed *= sprintModifier;
-                    isSprinting = true;
-                }
-                else if (Input.GetKeyDown(KeyCode.LeftShift) && isSprinting == true)
-                {
-                    GetComponent<PlayerMovement>().speed /= sprintModifier;
-                    isSprinting = false;
-                }*/
-        if (Input.GetKey(KeyCode.LeftShift) && isSprinting == false)
-        {
-            GetComponent<PlayerMovement>().Speed *= sprintModifier;
-            isSprinting = true;
-        }
-        else if (!Input.GetKey(KeyCode.LeftControl) && isSprinting == true)
-        {
-            GetComponent<PlayerMovement>().Speed /= sprintModifier;
-            isSprinting = false;
-        }
+        Stand();
+        GetComponent<PlayerMovement>().Speed = sprintSpeed;
+    }
+    private void Walk()
+    {
+        GetComponent<PlayerMovement>().Speed = walkSpeed;
     }
     private void QuickAttack()
     {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            //ToDo - Create Quickattack Event to subscribe to 
-        }
+        Debug.Log("Quick attacking");
     }
     private void MovementAbility()
     {
-/*        if (Input.GetKeyDown(KeyCode.V))
-        {
-            //ToDo - Create MovementAbility Event to subscribe to 
-        }*/
+        Debug.Log("Movement activated");
     }
     private void HealingAbility()
     {
-        /*        if (Input.GetKeyDown(KeyCode.V))
-                {
-                    //ToDo - Create HealingAbility Event to subscribe to 
-                }*/
+        Debug.Log("Healing Activated");
+
     }
     private void DefenceAbility()
     {
-        /*        if (Input.GetKeyDown(KeyCode.V))
-                {
-                    //ToDo - Create DefenceAbility Event to subscribe to 
-                }*/
+        Debug.Log("Defence Activated");
+
     }
     private void OffenceAbility()
     {
-        /*        if (Input.GetKeyDown(KeyCode.V))
-                {
-                    //ToDo - Create OffenceAbility Event to subscribe to 
-                }*/
+        Debug.Log("Offence Activated");
+
     }
     private void UltimateAbility()
     {
-        /*        if (Input.GetKeyDown(KeyCode.V))
-                {
-                    //ToDo - Create UltimateAbility Event to subscribe to 
-                }*/
+        Debug.Log("Using Ultimate Ability!");
+
+    }
+    private void Attack1()
+    {
+        if (this.GetComponent<PlayerScript>().Gun.GetComponent<Gun>() != null)
+        {
+            this.GetComponent<PlayerScript>().Gun.GetComponent<Gun>().WeaponLogic();
+        }
+        else
+        {
+            Debug.Log("No Weapon to attack with");
+
+        }        
+    }
+    private void Attack2()
+    {
+        this.GetComponent<PlayerScript>().Gun.GetComponent<Gun>().AimLogic();
     }
 }
 

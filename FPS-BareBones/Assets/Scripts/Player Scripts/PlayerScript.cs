@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerScript : UnitScript
+public class PlayerScript : MonoBehaviour
 {
     [SerializeField]private float health;
+    [SerializeField]private GameObject gun;
     public float Health { get => health; set => health = value; }
+    public GameObject Gun { get => gun; set => gun = value; }
 
     private void OnCollisionEnter(Collision collision)
     {

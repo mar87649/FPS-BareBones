@@ -49,14 +49,7 @@ public class Gun : MonoBehaviour
     {
         WeaponLogic();
 
-        if (Input.GetButton("Fire2"))
-        {
-            AimDownSights();
-        }
-        else
-        {
-            AimHipFire();
-        }
+
     }
     /// <summary>
     /// Aim down sights method.
@@ -99,19 +92,72 @@ public class Gun : MonoBehaviour
     /// <summary>
     /// Fire weapon based on automatic or manual
     /// </summary>
-    private void WeaponLogic()
+    /*    public void WeaponLogic()
+        {
+            if (automatic)
+            {
+                if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
+                {
+                    nextTimeToFire = Time.time + fireRate;
+                    Shoot();
+                }
+            }
+            else if (Input.GetButtonDown("Fire1"))
+            {
+                Shoot();
+            }
+        }*/
+    /*    public void WeaponLogic()
+        {
+            if (automatic)
+            {
+                if (Input.GetButtonDown("Fire1") && Time.time >= nextTimeToFire)
+                {
+                    nextTimeToFire = Time.time + fireRate;
+                    Shoot();
+                }
+            }
+            else if (Input.GetButtonDown("Fire1"))
+            {
+                Shoot();
+            }
+        }*/
+    public void WeaponLogic()
     {
         if (automatic)
         {
-            if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
+            if (Time.time >= nextTimeToFire)
             {
                 nextTimeToFire = Time.time + fireRate;
                 Shoot();
             }
         }
-        else if (Input.GetButtonDown("Fire1"))
+        else
         {
             Shoot();
+        }
+    }
+
+    /*    public void AimLogic()
+        {
+            if (Input.GetButton("Fire2"))
+            {
+                AimDownSights();
+            }
+            else
+            {
+                AimHipFire();
+            }
+        }*/
+    public void AimLogic()
+    {
+        if (Input.GetButton("Fire2"))
+        {
+            AimDownSights();
+        }
+        else
+        {
+            AimHipFire();
         }
     }
 }
