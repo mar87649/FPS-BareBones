@@ -20,6 +20,7 @@ public class PlayerActions : MonoBehaviour
     private Vector3 standingVector;
     private float sprintSpeed;
     private float walkSpeed;
+    private bool attack1Hold;
 
     private void Awake()
     {
@@ -36,7 +37,10 @@ public class PlayerActions : MonoBehaviour
         controls.Player.DefenceAbility.performed += e => DefenceAbility();
         controls.Player.HealingAbility.performed += e => HealingAbility();
         controls.Player.UltimateAbility.performed += e => UltimateAbility();
-        controls.Player.Attack1.performed += e => Attack1();
+        //controls.Player.Attack1.performed += e => Attack1();
+        //controls.Player.Attack1.canceled += e => Attack1();
+        controls.Player.Attack1.performed += e => attack1Hold = true;
+        controls.Player.Attack1.canceled += e => attack1Hold = false;
         controls.Player.Attack2.performed += e => Attack2();
         controls.Player.Attack2.canceled += e => Attack2();
 
@@ -65,7 +69,10 @@ public class PlayerActions : MonoBehaviour
 
     void Update()
     {
-
+        if (attack1Hold)
+        {
+            Attack1();
+        }
     }
     private void Jump()
     {
@@ -135,19 +142,18 @@ public class PlayerActions : MonoBehaviour
     }
     private void Attack1()
     {
-        if (this.GetComponent<PlayerScript>().Gun.GetComponent<Gun>() != null)
+        if (this.GetComponent<PlayerScript>().Weapon.GetComponent<Gun>() != null)
         {
-            this.GetComponent<PlayerScript>().Gun.GetComponent<Gun>().WeaponLogic();
+            this.GetComponent<PlayerScript>().Weapon.GetComponent<Gun>().WeaponLogic();
         }
         else
         {
             Debug.Log("No Weapon to attack with");
-
-        }        
+        }
     }
     private void Attack2()
     {
-        this.GetComponent<PlayerScript>().Gun.GetComponent<Gun>().AimLogic();
+        this.GetComponent<PlayerScript>().Weapon.GetComponent<Gun>().AimLogic();
     }
 }
 

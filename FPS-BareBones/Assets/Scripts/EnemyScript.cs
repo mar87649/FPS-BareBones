@@ -2,21 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyScript : MonoBehaviour
+public class EnemyScript : UnitScript
 {
-    [SerializeField] private float health;
-    public float Health { get => health; set => health = value; }
-    public void Takedamage(float amount)
-    {
+    [SerializeField] private float attackDamage = 10f;
 
-        Health -= amount;
-        if (Health <= 0f)
-        {
-            Die();
-        }
-    }
-    private void Die()
+    public float AttackDamage { get => attackDamage; set => attackDamage = value; }
+    public override void Die()
     {
-        Destroy(gameObject);
+        DestroyImmediate(gameObject);
     }
 }

@@ -47,9 +47,7 @@ public class Gun : MonoBehaviour
 
     void Update()
     {
-        WeaponLogic();
-
-
+        
     }
     /// <summary>
     /// Aim down sights method.
@@ -80,11 +78,10 @@ public class Gun : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(PovCam.transform.position, PovCam.transform.forward, out hit, Range))
         {
-            EnemyScript target = hit.transform.GetComponent<EnemyScript>();
+            UnitScript target = hit.transform.GetComponent<UnitScript>();            
             if (target != null)
             {
                 target.Takedamage(Damage);
-                // TODO - possibly add an event to damage target
             }
         }
     }

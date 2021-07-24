@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitScript : MonoBehaviour
-
 {
+
     [SerializeField] private float maxHealth;
     [SerializeField] private float health;
     [SerializeField] private GameObject weapon;
@@ -13,26 +13,25 @@ public class UnitScript : MonoBehaviour
     public GameObject Weapon { get => weapon; set => weapon = value; }
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
 
-    private void Awake()
-    {
-        maxHealth = health;
-    }
+    public delegate void HealthUpdate(float amount);
+    public static event HealthUpdate OnHealthChange;
 
     private void Start()
     {
-        
+        maxHealth = health;
     }
-    public void Takedamage(float amount)
+    public virtual void Takedamage(float damageTaken)
     {
-
-        Health -= amount;
+        Health -= damageTaken;
+        OnHealthChange(Health);
         if (Health <= 0f)
         {
             Die();
         }
     }
-    private void Die()
+    public virtual void Die()
     {
         //ToDo - add game over
+        return;
     }
 }
