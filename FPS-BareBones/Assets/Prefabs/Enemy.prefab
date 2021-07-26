@@ -184,7 +184,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2855696341547609751}
-  - component: {fileID: 6678618796142933133}
+  - component: {fileID: 1303542498751336958}
   - component: {fileID: 2855696341547609750}
   m_Layer: 0
   m_Name: Healthbar
@@ -200,7 +200,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2855696341547609744}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -211,10 +211,10 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.000011920929}
   m_SizeDelta: {x: 328.4767, y: 38.9498}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6678618796142933133
+--- !u!114 &1303542498751336958
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2855696341547609744}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad6c551a969e900438c334dc2947d9f8, type: 3}
+  m_Script: {fileID: 11500000, guid: 117bd6c2dd4f40140b71598a62f44c28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   unit: {fileID: 2855696341638541249}
@@ -328,6 +328,7 @@ MonoBehaviour:
   maxHealth: 50
   health: 50
   weapon: {fileID: 0}
+  healthBar: {fileID: 1303542498751336958}
   attackDamage: 10
 --- !u!33 &2855696341638541252
 MeshFilter:

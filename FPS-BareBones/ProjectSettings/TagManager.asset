@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Floor
   - Enemy
+  - UI Pause Menu
   layers:
   - Default
   - TransparentFX

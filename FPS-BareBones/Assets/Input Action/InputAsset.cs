@@ -331,6 +331,33 @@ public class @InputAsset : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Menus"",
+            ""id"": ""6033176d-1759-4652-a212-3e04c8de2008"",
+            ""actions"": [
+                {
+                    ""name"": ""PauseMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""77b913d1-0177-4ef8-8a69-e7748cc46d2d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""d8fbaec6-10d5-4c1c-b142-40e244f63eb5"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""PauseMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -368,6 +395,9 @@ public class @InputAsset : IInputActionCollection, IDisposable
         m_Player_DefenceAbility = m_Player.FindAction("DefenceAbility", throwIfNotFound: true);
         m_Player_HealingAbility = m_Player.FindAction("HealingAbility", throwIfNotFound: true);
         m_Player_UltimateAbility = m_Player.FindAction("UltimateAbility", throwIfNotFound: true);
+        // Menus
+        m_Menus = asset.FindActionMap("Menus", throwIfNotFound: true);
+        m_Menus_PauseMenu = m_Menus.FindAction("PauseMenu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -550,6 +580,39 @@ public class @InputAsset : IInputActionCollection, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Menus
+    private readonly InputActionMap m_Menus;
+    private IMenusActions m_MenusActionsCallbackInterface;
+    private readonly InputAction m_Menus_PauseMenu;
+    public struct MenusActions
+    {
+        private @InputAsset m_Wrapper;
+        public MenusActions(@InputAsset wrapper) { m_Wrapper = wrapper; }
+        public InputAction @PauseMenu => m_Wrapper.m_Menus_PauseMenu;
+        public InputActionMap Get() { return m_Wrapper.m_Menus; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenusActions set) { return set.Get(); }
+        public void SetCallbacks(IMenusActions instance)
+        {
+            if (m_Wrapper.m_MenusActionsCallbackInterface != null)
+            {
+                @PauseMenu.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnPauseMenu;
+                @PauseMenu.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnPauseMenu;
+                @PauseMenu.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnPauseMenu;
+            }
+            m_Wrapper.m_MenusActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @PauseMenu.started += instance.OnPauseMenu;
+                @PauseMenu.performed += instance.OnPauseMenu;
+                @PauseMenu.canceled += instance.OnPauseMenu;
+            }
+        }
+    }
+    public MenusActions @Menus => new MenusActions(this);
     private int m_KBMSchemeIndex = -1;
     public InputControlScheme KBMScheme
     {
@@ -575,5 +638,9 @@ public class @InputAsset : IInputActionCollection, IDisposable
         void OnDefenceAbility(InputAction.CallbackContext context);
         void OnHealingAbility(InputAction.CallbackContext context);
         void OnUltimateAbility(InputAction.CallbackContext context);
+    }
+    public interface IMenusActions
+    {
+        void OnPauseMenu(InputAction.CallbackContext context);
     }
 }

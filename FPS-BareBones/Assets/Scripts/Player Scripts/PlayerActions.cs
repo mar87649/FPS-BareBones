@@ -20,12 +20,11 @@ public class PlayerActions : MonoBehaviour
     private Vector3 standingVector;
     private float sprintSpeed;
     private float walkSpeed;
-    private bool attack1Hold;
+    private bool primaryHold;
 
     private void Awake()
     {
-        controls = new InputAsset();
-        //controls.Player.Attack1.performed += e =>  
+        controls = new InputAsset();        
         controls.Player.Jump.performed += e => Jump();
         controls.Player.Crouch.performed += e => Crouch();
         controls.Player.Crouch.canceled += e => Stand();
@@ -37,14 +36,10 @@ public class PlayerActions : MonoBehaviour
         controls.Player.DefenceAbility.performed += e => DefenceAbility();
         controls.Player.HealingAbility.performed += e => HealingAbility();
         controls.Player.UltimateAbility.performed += e => UltimateAbility();
-        //controls.Player.Attack1.performed += e => Attack1();
-        //controls.Player.Attack1.canceled += e => Attack1();
-        controls.Player.Attack1.performed += e => attack1Hold = true;
-        controls.Player.Attack1.canceled += e => attack1Hold = false;
+        controls.Player.Attack1.performed += e => primaryHold = true;
+        controls.Player.Attack1.canceled += e => primaryHold = false;
         controls.Player.Attack2.performed += e => Attack2();
         controls.Player.Attack2.canceled += e => Attack2();
-
-
     }
     private void OnEnable()
     {
@@ -69,7 +64,7 @@ public class PlayerActions : MonoBehaviour
 
     void Update()
     {
-        if (attack1Hold)
+        if (primaryHold)
         {
             Attack1();
         }
@@ -153,7 +148,14 @@ public class PlayerActions : MonoBehaviour
     }
     private void Attack2()
     {
-        this.GetComponent<PlayerScript>().Weapon.GetComponent<Gun>().AimLogic();
+        if (this.GetComponent<PlayerScript>().Weapon.GetComponent<Gun>() != null)
+        {
+            this.GetComponent<PlayerScript>().Weapon.GetComponent<Gun>().AimLogic();
+        }
+        else
+        {
+            Debug.Log("No Weapon to attack with");
+        }        
     }
 }
 

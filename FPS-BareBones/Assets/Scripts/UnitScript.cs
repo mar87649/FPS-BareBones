@@ -8,14 +8,11 @@ public class UnitScript : MonoBehaviour
     [SerializeField] private float maxHealth;
     [SerializeField] private float health;
     [SerializeField] private GameObject weapon;
+    [SerializeField] private Healthbar healthBar;
 
     public float Health { get => health; set => health = value; }
     public GameObject Weapon { get => weapon; set => weapon = value; }
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
-
-    public delegate void HealthUpdate(float amount);
-    public static event HealthUpdate OnHealthChange;
-
     private void Start()
     {
         maxHealth = health;
@@ -23,7 +20,7 @@ public class UnitScript : MonoBehaviour
     public virtual void Takedamage(float damageTaken)
     {
         Health -= damageTaken;
-        OnHealthChange(Health);
+        healthBar.UpdateHealthbar();
         if (Health <= 0f)
         {
             Die();

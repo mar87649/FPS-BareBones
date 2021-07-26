@@ -5,25 +5,20 @@ using UnityEngine.InputSystem;
 
 public class Test : MonoBehaviour
 {
-    [SerializeField] private float health;
-    public float Health { get => health; set => health = value; }
-    // Update is called once per frame
-    void Update()
+    private InputAsset controls;
+    private void Awake()
     {
-
+        controls = new InputAsset();
+        controls.Menus.PauseMenu.performed += e => Debug.Log("Hello World");
     }
-    public void Takedamage(float amount)
+    private void OnEnable()
     {
-
-        Health -= amount;
-        if (Health <= 0f)
-        {
-            Die();
-        }
+        controls.Enable();
+    }
+    private void OnDisable()
+    {
+        controls.Disable();
     }
 
-    private void Die()
-    {
-        Destroy(gameObject);
-    }
+
 }

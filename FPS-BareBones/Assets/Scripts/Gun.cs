@@ -34,6 +34,7 @@ public class Gun : MonoBehaviour
     public Vector3 hipFirePosition;// = new Vector3(1f, 0.05f, 1f);
     public Vector3 adsPosition;// = new Vector3(0f, .15f, 1f);
     public float adsZoom = 2f;
+    private bool ads = false;
     #endregion
     private void Start()
     {
@@ -148,12 +149,14 @@ public class Gun : MonoBehaviour
         }*/
     public void AimLogic()
     {
-        if (Input.GetButton("Fire2"))
+        if (!ads)
         {
-            AimDownSights();
+            ads = true;
+            AimDownSights();            
         }
         else
         {
+            ads = false;
             AimHipFire();
         }
     }
