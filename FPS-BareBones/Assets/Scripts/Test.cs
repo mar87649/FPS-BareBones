@@ -5,20 +5,20 @@ using UnityEngine.InputSystem;
 
 public class Test : MonoBehaviour
 {
-    private InputAsset controls;
-    private void Awake()
+    KillFeedElement killfeedElement;
+    EnemyScript enemy;
+    public void OnKill()
     {
-        controls = new InputAsset();
-        controls.Menus.PauseMenu.performed += e => Debug.Log("Hello World");
-    }
-    private void OnEnable()
-    {
-        controls.Enable();
-    }
-    private void OnDisable()
-    {
-        controls.Disable();
+        //show killfeed if inactivce
+        GameObject.FindGameObjectWithTag("KillFeed").SetActive(true);
+        //set killfeed variables
+        //create new killfeed element or unhide existing
+        //hide after x seconds
     }
 
+    public void ShowKillOnFeed()
+    {
+
+    }
 
 }

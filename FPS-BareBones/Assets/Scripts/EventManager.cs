@@ -15,4 +15,9 @@ public class EventManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
+
+    public delegate void KillFeed(string unitName);
+    public static event KillFeed OnKill;
+
+
 }

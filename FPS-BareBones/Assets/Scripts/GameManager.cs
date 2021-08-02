@@ -30,7 +30,11 @@ public class GameManager : MonoBehaviour
     [System.Serializable]
     class SaveData
     {
-        //data to be saved
+        public int numEnemies;
+        public Vector3 enemyPos;
+        public int score;
+        public int lives;
+        public float Health;
     }
 
     public void SaveGameData()
