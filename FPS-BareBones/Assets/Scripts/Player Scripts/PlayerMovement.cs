@@ -10,10 +10,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public float Speed { get => speed; set => speed = value; }
     [SerializeField] public float jumpForce;
-    private Rigidbody playerRB;
     [SerializeField] private GameObject cameraView;
-    [SerializeField] private float mouseSensitivity = 10f;
-    private float verticalLook = 0f;
     [SerializeField] private float speed;
     private InputAsset controls;
     private Vector2 direction;
@@ -40,9 +37,6 @@ public class PlayerMovement : MonoBehaviour
     {
         MovePlayer();
     }
-    ///<summary>
-    ///Moves player in 3d Space.
-    ///<summary>
     private void MovePlayer()
     {
         Vector3 movementVertical = Vector3.Scale(cameraView.transform.forward * direction.y, new Vector3(1, 0, 1));

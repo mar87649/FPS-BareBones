@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class Gun : MonoBehaviour
 {
     [SerializeField] private float damage;
@@ -26,7 +25,8 @@ public class Gun : MonoBehaviour
     public float ReloadSpeed { get => reloadSpeed; set => reloadSpeed = value; }
     public GameObject PovCam { get => povCam; set => povCam = value; }
     public bool Automatic { get => automatic; set => automatic = value; }
-    public float playerFOV { get; private set; }
+    public float PlayerFOV { get; private set; }
+    public GameObject Parent { get => parent; set => parent = value; }
 
     private float nextTimeToFire = 0f;
     [SerializeField] private float aimSpeed = 1f;
@@ -36,14 +36,18 @@ public class Gun : MonoBehaviour
     public float adsZoom = 2f;
     private bool ads = false;
     #endregion
+    private void Awake()
+    {
+        PovCam = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).GetChild(1).gameObject;
+        Parent = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).GetChild(0).gameObject;
+        parentBounds = Parent.transform.gameObject.GetComponent<Collider>().bounds;
+        PlayerFOV = PovCam.GetComponent<Camera>().fieldOfView;
+    }
     private void Start()
     {
-        //set player FOV from Camera object
-        playerFOV = povCam.GetComponent<Camera>().fieldOfView;
-        //set hipfire and ads positions - dependant on parent bounds
-        parentBounds = parent.transform.gameObject.GetComponent<Collider>().bounds;
-        hipFirePosition = new Vector3(parentBounds.extents.x*2, parentBounds.extents.y*1f, parentBounds.extents.z*2);
-        adsPosition = new Vector3(parentBounds.center.x, parentBounds.extents.y*1.15f, parentBounds.extents.z*2);
+        hipFirePosition = new Vector3(parentBounds.extents.x * 2, parentBounds.extents.y * 1f, parentBounds.extents.z * 2);
+        adsPosition = new Vector3(parentBounds.center.x, parentBounds.extents.y * 1.15f, parentBounds.extents.z * 2);
+        AimHipFire();
     }
 
     void Update()
@@ -58,7 +62,7 @@ public class Gun : MonoBehaviour
     private void AimDownSights()
     {
         transform.localPosition = Vector3.Lerp(hipFirePosition, adsPosition, aimSpeed);
-        povCam.GetComponent<Camera>().fieldOfView = playerFOV / adsZoom;
+        povCam.GetComponent<Camera>().fieldOfView = PlayerFOV / adsZoom;
     }
     /// <summary>
     /// Aim hip fire method.
@@ -68,7 +72,7 @@ public class Gun : MonoBehaviour
     private void AimHipFire()
     {
         transform.localPosition = Vector3.Lerp(adsPosition, hipFirePosition, aimSpeed);
-        povCam.GetComponent<Camera>().fieldOfView = playerFOV;
+        povCam.GetComponent<Camera>().fieldOfView = PlayerFOV;
     }
     /// <summary>
     /// Shoot at target by using raycast.ss
@@ -77,7 +81,7 @@ public class Gun : MonoBehaviour
     private void Shoot()
     {
         RaycastHit hit;
-        if (Physics.Raycast(PovCam.transform.position, PovCam.transform.forward, out hit, Range))
+        if (Physics.Raycast(PovCam.transform.position, povCam.transform.forward, out hit, Range))
         {
             UnitScript target = hit.transform.GetComponent<UnitScript>();            
             if (target != null)

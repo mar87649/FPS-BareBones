@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    private bool isPausedGame = false;
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject optionsMenu;
     public static UIManager Instance { get; private set; }

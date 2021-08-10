@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventManager : MonoBehaviour
+public class MainCamera : MonoBehaviour
 {
-    public virtual EventManager Instance { get; private set; }
-    private void Awake()
+    #region Singleton Pattern
+    public static MainCamera Instance { get; private set; }
+    private void Singleton()
     {
         if (Instance != null)
         {
@@ -14,5 +15,10 @@ public class EventManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+    #endregion
+    private void Awake()
+    {
+        Singleton();
     }
 }

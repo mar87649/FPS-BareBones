@@ -7,7 +7,10 @@ public class EnemyHealthBar : Healthbar
 {
     void Update()
     {
-        transform.LookAt(GameObject.FindWithTag("Player").transform);
+        if (GameObject.FindWithTag("Player") != null)
+        {
+            transform.LookAt(GameObject.FindWithTag("Player").transform);
+        }
     } 
 }
 

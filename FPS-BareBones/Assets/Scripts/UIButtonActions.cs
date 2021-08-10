@@ -8,7 +8,7 @@ public class UIButtonActions : MonoBehaviour
 {
     public void StartGame()
     {
-        SceneManager.LoadScene("TestScene", LoadSceneMode.Single);
+        GameManager.Instance.StartNewGame();
     }
 
     public void ExitApplication()
@@ -20,12 +20,11 @@ public class UIButtonActions : MonoBehaviour
     }
     public void SaveGame()
     {
-        Debug.Log("Games Saved");
-
+        GameManager.Instance.SaveGameData();
     }
     public void LoadGame()
     {
-        Debug.Log("Game Loaded");
+        GameManager.Instance.LoadGameData();
 
     }
     public void Options()

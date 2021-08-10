@@ -9,7 +9,7 @@ public class PlayerLook : MonoBehaviour
     private float verticalLook = 0f;
     public float verticalClamp = 45;
     public float sensitivity = .1f;
-    [SerializeField] private GameObject camera;
+    [SerializeField] private new GameObject camera;
     [SerializeField] private GameObject parent;
 
     private void Awake()
