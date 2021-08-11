@@ -21,12 +21,17 @@ public class PlayerScript : UnitScript
         Debug.Log("Player Died");
 
     }
-
     public GameObject InitWeapon(GameObject weapon)
-    {        
-        weapon.transform.parent = playerBody.transform;
-        Weapon = weapon;
-        return weapon;
+    {
+        if (weapon == null)
+        {
+            return null;
+        }else
+        {
+            weapon.transform.parent = playerBody.transform;
+            Weapon = weapon;
+            return weapon;
+        }
     }
 
 }

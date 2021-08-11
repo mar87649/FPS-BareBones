@@ -20,12 +20,13 @@ public class UIButtonActions : MonoBehaviour
     }
     public void SaveGame()
     {
-        GameManager.Instance.SaveGameData();
+        SaveManager.Instance.SaveGameData();
     }
     public void LoadGame()
     {
-        GameManager.Instance.LoadGameData();
-
+        UIManager.Instance.CloseGameMenu();
+        UIManager.Instance.ResumeGame();
+        GameManager.Instance.LoadFromSave();
     }
     public void Options()
     {

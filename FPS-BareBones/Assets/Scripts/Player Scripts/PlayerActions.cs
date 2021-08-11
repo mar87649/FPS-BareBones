@@ -137,13 +137,14 @@ public class PlayerActions : MonoBehaviour
     }
     private void Attack1()
     {
-        if (this.GetComponent<PlayerScript>().Weapon.GetComponent<Gun>() != null)
+        if (GetComponent<PlayerScript>().Weapon == null)
         {
-            this.GetComponent<PlayerScript>().Weapon.GetComponent<Gun>().WeaponLogic();
+            Debug.Log("No WeaponName to attack with");
         }
         else
-        {
-            Debug.Log("No Weapon to attack with");
+        {      
+            //TODO - Make getting weapon dynamic enough to get any weapon
+            GetComponent<PlayerScript>().Weapon.GetComponent<Gun>().WeaponLogic();
         }
     }
     private void Attack2()
@@ -154,7 +155,7 @@ public class PlayerActions : MonoBehaviour
         }
         else
         {
-            Debug.Log("No Weapon to attack with");
+            Debug.Log("No WeaponName to attack with");
         }        
     }
 }

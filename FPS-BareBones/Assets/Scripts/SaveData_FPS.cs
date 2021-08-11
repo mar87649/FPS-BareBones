@@ -10,7 +10,7 @@ public class SaveData_FPS
     #region Player Info
     public int  MaxHealth;
     public int Health;
-    public string Weapon;
+    public string WeaponName;
     public int PosX;
     public int PosY;
     public int PosZ;
