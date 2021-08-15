@@ -30,11 +30,14 @@ public class SaveManager : MonoBehaviour
 
         SavePlayerStats(save);
 
-        save.WeaponName = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>().Weapon.name;
+        save.WeaponName = GameManager.Instance.Player.GetComponent<PlayerScript>().Weapon.name;
+
+        //save.WeaponName = GameManager.Instance.Player.GetComponent<PlayerScript>().Weapon.name;
 
         SavePlayerPos(save);
         SavePlayerRot(save);
 
+        save.Score = GameManager.Instance.Score;
         save.LastScene = SceneManager.GetActiveScene().name;
 
         return save;
@@ -51,20 +54,24 @@ public class SaveManager : MonoBehaviour
 
     public void SavePlayerPos(SaveData_FPS save)
     {
-        save.PosX = (int)GameObject.FindGameObjectWithTag("Player").transform.position.x * 1000;
-        save.PosY = (int)GameObject.FindGameObjectWithTag("Player").transform.position.y * 1000;
-        save.PosZ = (int)GameObject.FindGameObjectWithTag("Player").transform.position.z * 1000;
+        save.PosX = (int)GameManager.Instance.Player.transform.position.x * 1000;
+        save.PosY = (int)GameManager.Instance.Player.transform.position.y * 1000;
+        save.PosZ = (int)GameManager.Instance.Player.transform.position.z * 1000;
     }
     public void SavePlayerRot(SaveData_FPS save)
     {
-        save.RotX = (int)GameObject.FindGameObjectWithTag("Player").transform.eulerAngles.x * 1000;
-        save.RotY = (int)GameObject.FindGameObjectWithTag("Player").transform.eulerAngles.y * 1000;
-        save.RotZ = (int)GameObject.FindGameObjectWithTag("Player").transform.eulerAngles.z * 1000;
+        save.RotX = (int)GameManager.Instance.Player.transform.eulerAngles.x * 1000;
+        save.RotY = (int)GameManager.Instance.Player.transform.eulerAngles.y * 1000;
+        save.RotZ = (int)GameManager.Instance.Player.transform.eulerAngles.z * 1000;
     }
     public void SavePlayerStats(SaveData_FPS save)
     {
-        save.Health = (int)GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>().Health * 1000;
-        save.MaxHealth = (int)GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>().MaxHealth * 1000;
+        save.Health = (int)GameManager.Instance.Player.GetComponent<PlayerScript>().Health * 1000;
+        save.MaxHealth = (int)GameManager.Instance.Player.GetComponent<PlayerScript>().MaxHealth * 1000;
+    }
+    public void SavePlayerScore(SaveData_FPS save)
+    {
+        save.Score = GameManager.Instance.Score;
     }
 }
    

@@ -25,28 +25,26 @@ public class LoadManager : MonoBehaviour
         Singleton();
     }
 
-    public GameObject LoadPlayer(SaveData_FPS data)
+    public GameObject LoadPlayer(SaveData_FPS save)
     {
         GameObject playerPrefab = Resources.Load<GameObject>("Prefabs/Player");
         GameObject player = Instantiate(playerPrefab);
-        if (data == null)
-        {
-            player.name = playerPrefab.name;
-            player.transform.position = new Vector3(0,0,0);
-            player.transform.rotation = new Quaternion(0, 0, 0, 0);
+        player.name = playerPrefab.name;
+        if (save == null)
+        {            
+            player.transform.SetPositionAndRotation(new Vector3(0,0,0), new Quaternion(0, 0, 0, 0));
             player.GetComponent<PlayerScript>().MaxHealth = playerPrefab.GetComponent<PlayerScript>().MaxHealth;
             player.GetComponent<PlayerScript>().Health = playerPrefab.GetComponent<PlayerScript>().Health;
             return player;
         }else
         {
-            GameObject weapon = LoadSaveWeapon(data.WeaponName);
+            GameObject weapon = LoadSaveWeapon(save.WeaponName);
             player.GetComponent<PlayerScript>().InitWeapon(weapon);
-
-            player.name = playerPrefab.name;
-            player.transform.position = new Vector3(data.PosX * .001f, data.PosY * .001f, data.PosZ * .001f);
-            player.transform.eulerAngles = new Vector3(data.RotX * .001f, data.RotY * .001f, data.RotZ * .001f);
-            player.GetComponent<PlayerScript>().MaxHealth = data.MaxHealth;
-            player.GetComponent<PlayerScript>().Health = data.Health;
+           
+            player.transform.position = new Vector3(save.PosX * .001f, save.PosY * .001f, save.PosZ * .001f);
+            player.transform.eulerAngles = new Vector3(save.RotX * .001f, save.RotY * .001f, save.RotZ * .001f);
+            player.GetComponent<PlayerScript>().MaxHealth = save.MaxHealth;
+            player.GetComponent<PlayerScript>().Health = save.Health;
 
             return player;
         }
@@ -64,6 +62,10 @@ public class LoadManager : MonoBehaviour
             weapon.name = weaponPrefab.name;
             return weapon;
         }
+    }
+    public int LoadScoreFromSave(SaveData_FPS save)
+    {
+        return save.Score;
     }
     #region Load scene and do after load
     IEnumerator DoAfterSceneLoad(string SceneName, List<Action> functionList)
@@ -87,7 +89,7 @@ public class LoadManager : MonoBehaviour
         StartCoroutine(DoAfterSceneLoad(SceneName, functionList));
     }
     #endregion
-
+    #region Load New Game
     public void LoadNewGame()
     {
         StartCoroutine(LoadNewGameEnum());
@@ -107,8 +109,10 @@ public class LoadManager : MonoBehaviour
         GameObject weapon = Instantiate(Resources.Load<GameObject>("Prefabs/Gun"));
         weapon.name = Resources.Load<GameObject>("Prefabs/Gun").name;
         player.GetComponent<PlayerScript>().Weapon = player.GetComponent<PlayerScript>().InitWeapon(weapon);
-
+        GameManager.Instance.Player = player;
+        GameManager.Instance.InitLevel();
     }
+    #endregion
 }
 
 

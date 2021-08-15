@@ -5,22 +5,41 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance { get; private set; }
+    private void Singleton()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+    private void Awake()
+    {
+        Singleton();
+        state = State.Inacttive;
+    }
+
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject optionsMenu;
-    public static UIManager Instance { get; private set; }
+    [SerializeField] private GameObject killFeed;
+    [SerializeField] private GameObject scoreBoard;
+
     public GameObject PauseMenu { get => pauseMenu; private set => pauseMenu = value; }
     public GameObject OptionsMenu { get => optionsMenu; private set => optionsMenu = value; }
+    public GameObject KillFeed { get => killFeed; set => killFeed = value; }
+    public GameObject ScoreBoard { get => scoreBoard; set => scoreBoard = value; }
+
+  
 
     private enum State { MainMenu, GameMenu, OptionsMenu, Inacttive }
 
     private State state;
     private State previousState;
 
-    private void Awake()
-    {
-        Singleton();
-        state = State.Inacttive;
-    }
+
     public void PauseGame()
     {
         Time.timeScale = 0;
@@ -78,14 +97,5 @@ public class UIManager : MonoBehaviour
         }
         Debug.Log(state);
     }
-    private void Singleton()
-    {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
+
 }

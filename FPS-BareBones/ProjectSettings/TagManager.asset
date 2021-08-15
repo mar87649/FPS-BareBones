@@ -6,8 +6,12 @@ TagManager:
   tags:
   - Floor
   - Enemy
-  - UI Pause Menu
   - KillFeed
+  - ScoreBoard
+  - Options Menu
+  - Undefined
+  - Pause Menu
+  - Obstacle
   layers:
   - Default
   - TransparentFX

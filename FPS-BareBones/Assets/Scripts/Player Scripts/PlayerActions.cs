@@ -78,7 +78,7 @@ public class PlayerActions : MonoBehaviour
         }
         if (transform.position.y > maxJumpHeight)
         {
-            playerRB.AddForce(Vector3.down, ForceMode.Impulse);
+            playerRB.AddForce(Vector3.down*playerRB.mass, ForceMode.Impulse);
         }
     }
     private void OnCollisionEnter(Collision other)

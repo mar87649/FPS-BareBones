@@ -21,4 +21,6 @@ public class SaveData_FPS
 
     public string LastScene;
 
+    public int Score;
+
 }

@@ -12,5 +12,13 @@ public class PlayerCollision : MonoBehaviour
             float damageTaken = collision.gameObject.GetComponent<EnemyScript>().AttackDamage;
             GetComponent<PlayerScript>().Takedamage(damageTaken);
         }
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            //stop movment
+            Debug.Log("hit obstacle");
+
+            GetComponent<PlayerMovement>().StopMovement();
+        }
+
     }
 }

@@ -15,10 +15,13 @@ public class ScoreBoard : MonoBehaviour
         ScoreText.text = Score.ToString();
     }
 
-    public void UpdateScore(int amount)
+
+    public int UpdateScore(int amount)
     {
         Score += amount;
         ScoreText.text = Score.ToString();
+        GameManager.Instance.Score = Score;
+        return Score;
     }
 
 }

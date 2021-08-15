@@ -11,10 +11,7 @@ public class PlayerScript : UnitScript
 
     }
     public GameObject PlayerBody { get => playerBody; set => playerBody = value; }
-    private void Start()
-    {
 
-    }
     public override void Die()
     {
         //ToDo - add game over
