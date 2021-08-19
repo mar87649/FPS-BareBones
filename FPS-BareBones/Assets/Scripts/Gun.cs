@@ -14,6 +14,8 @@ public class Gun : MonoBehaviour
     [SerializeField] private GameObject povCam;
     [SerializeField] private bool automatic;
     [SerializeField] private GameObject parent;
+    [SerializeField] private Bounds parentBounds;
+
 
     #region Variables
     public float Damage { get => damage; set => damage = value; }
@@ -30,7 +32,7 @@ public class Gun : MonoBehaviour
 
     private float nextTimeToFire = 0f;
     [SerializeField] private float aimSpeed = 1f;
-    public Bounds parentBounds;
+
     public Vector3 hipFirePosition;// = new Vector3(1f, 0.05f, 1f);
     public Vector3 adsPosition;// = new Vector3(0f, .15f, 1f);
     public float adsZoom = 2f;
@@ -39,8 +41,8 @@ public class Gun : MonoBehaviour
     private void Awake()
     {
         PovCam = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).GetChild(1).gameObject;
-        Parent = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).GetChild(0).gameObject;
-        parentBounds = Parent.transform.gameObject.GetComponent<Collider>().bounds;
+        Parent = GameObject.FindGameObjectWithTag("Player");
+        parentBounds = Parent.transform.GetComponent<Collider>().bounds;
         PlayerFOV = PovCam.GetComponent<Camera>().fieldOfView;
     }
     private void Start()

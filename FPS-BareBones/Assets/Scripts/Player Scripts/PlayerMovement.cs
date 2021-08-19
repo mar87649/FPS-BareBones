@@ -8,11 +8,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float Speed { get => speed; set => speed = value; }
-    [SerializeField] public float jumpForce;
     [SerializeField] private GameObject cameraView;
-    [SerializeField] private float speed;
     [SerializeField] private Rigidbody playerRB;
+    [SerializeField] private CharacterController playerController;
+    private Vector3 jumpVector;
     private InputAsset controls;
     private Vector2 direction;
 
@@ -30,21 +29,18 @@ public class PlayerMovement : MonoBehaviour
     {
         controls.Disable();
     }
-    void Start()
-    {
-        
-    }
     void FixedUpdate()
     {
-        MovePlayerRB();
+        MovePlayerCC();
     }
-    private void MovePlayerAxis()
+
+    public void MovePlayerTranslate()
     {
         Vector3 movementVertical = Vector3.Scale(cameraView.transform.forward * direction.y, new Vector3(1, 0, 1));
-        transform.position += movementVertical * Speed * Time.deltaTime;
+        transform.position += GetComponent<PlayerScript>().Speed * Time.deltaTime * movementVertical;
 
         Vector3 movementHorizontal = Vector3.Scale(cameraView.transform.right * direction.x, new Vector3(1, 0, 1));
-        transform.position += movementHorizontal * Speed * Time.deltaTime;
+        transform.position += GetComponent<PlayerScript>().Speed * Time.deltaTime * movementHorizontal;
     }
 
     public void MovePlayerRB()
@@ -52,12 +48,40 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movementHorizontal = Vector3.Scale(cameraView.transform.right * direction.x, new Vector3(1, 0, 1));
         Vector3 movementVertical = Vector3.Scale(cameraView.transform.forward * direction.y, new Vector3(1, 0, 1));
 
-        playerRB.MovePosition(transform.position + ((movementVertical+movementHorizontal) * Speed * Time.deltaTime));
+        playerRB.velocity = transform.position + (GetComponent<PlayerScript>().Speed * Time.fixedDeltaTime * (movementVertical+movementHorizontal));
+    }
+    public void MovePlayerCC()
+    {
+        Vector3 movementHorizontal = Vector3.Scale(cameraView.transform.right * direction.x, new Vector3(1, 0, 1));
+        Vector3 movementVertical = Vector3.Scale(cameraView.transform.forward * direction.y, new Vector3(1, 0, 1));
+
+        playerController.Move(GetComponent<PlayerScript>().Speed * Time.deltaTime * (movementVertical + movementHorizontal + jumpVector) );
+
+        if (jumpVector.y > 0)
+        {
+            if (transform.position.y > GetComponent<PlayerScript>().MaxJumpHeight)
+            {
+                //TODO - extract as variable
+                jumpVector.y -= 9.8f * GetComponent<PlayerScript>().Mass * Time.deltaTime;
+            }
+        }
+
+    }
+
+    public void JumpPlayer()
+    {
+        if (GetComponent<PlayerScript>().IsOnGround)
+        {
+            jumpVector.y = GetComponent<PlayerScript>().JumpForce;
+            GetComponent<PlayerScript>().IsOnGround = false;
+        }
     }
 
     public void StopMovement()
     {
-        playerRB.MovePosition(transform.position+(Vector3.zero*Time.deltaTime));
+        //playerRB.MovePosition(transform.position+(Vector3.zero*Time.deltaTime));
     }
+
+
 
 }

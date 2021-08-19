@@ -5,14 +5,7 @@ using UnityEngine;
 
 public class PlayerActions : MonoBehaviour
 {
-    [SerializeField] private bool isOnGround;
-    [SerializeField] private bool isCrouched;
-    [SerializeField] private bool isSprinting;
-    [SerializeField] private Rigidbody playerRB;
-    [SerializeField] private float jumpForce;
-    [SerializeField] private float maxJumpHeight;
     [SerializeField] private GameObject playerObject;
-    [SerializeField] private float sprintModifier;
 
 
     private InputAsset controls;
@@ -20,8 +13,9 @@ public class PlayerActions : MonoBehaviour
     private Vector3 standingVector;
     private float sprintSpeed;
     private float walkSpeed;
+    private float crouchSpeed;
+    private float slideSpeed;
     private bool primaryHold;
-
     private void Awake()
     {
         controls = new InputAsset();        
@@ -51,16 +45,13 @@ public class PlayerActions : MonoBehaviour
     }
     void Start()
     {
-        playerRB = GetComponent<Rigidbody>();
-        maxJumpHeight = 2f;
-        jumpForce = 10f;
-        isOnGround = true;
-        playerRB.AddForce(Vector3.down);
         crouchedVector = Vector3.Scale(playerObject.transform.localScale, new Vector3(1f, .5f, 1f));
         standingVector = Vector3.Scale(playerObject.transform.localScale, new Vector3(1f, 1f, 1f));
-        walkSpeed = GetComponent<PlayerMovement>().Speed;
-        sprintSpeed = GetComponent<PlayerMovement>().Speed * sprintModifier;
-     }
+        walkSpeed = GetComponent<PlayerScript>().Speed;
+        sprintSpeed = GetComponent<PlayerScript>().Speed * GetComponent<PlayerScript>().SprintModifier;
+        crouchSpeed = GetComponent<PlayerScript>().Speed * GetComponent<PlayerScript>().CrouchModifier;
+        slideSpeed = GetComponent<PlayerScript>().Speed * GetComponent<PlayerScript>().SlideModifier;
+    }
 
     void Update()
     {
@@ -71,41 +62,38 @@ public class PlayerActions : MonoBehaviour
     }
     private void Jump()
     {
-        if (isOnGround)
-        {
-            playerRB.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isOnGround = false;
-        }
-        if (transform.position.y > maxJumpHeight)
-        {
-            playerRB.AddForce(Vector3.down*playerRB.mass, ForceMode.Impulse);
-        }
-    }
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag("Floor"))
-        {
-            isOnGround = true;
-            playerRB.velocity = Vector3.zero;
-        }
+        GetComponent<PlayerScript>().StandPlayerControler();
+        GetComponent<PlayerMovement>().JumpPlayer();
     }
     private void Crouch()
     {
-        Walk();
+        GetComponent<PlayerScript>().Speed = crouchSpeed;
+        GetComponent<PlayerScript>().CrouchPlayerControler();
         playerObject.transform.localScale = crouchedVector;
     }
     private void Stand() 
     {
+        GetComponent<PlayerScript>().StandPlayerControler();
         playerObject.transform.localScale = standingVector;
     }
     private void Sprint()
     {
         Stand();
-        GetComponent<PlayerMovement>().Speed = sprintSpeed;
+        GetComponent<PlayerScript>().IsSprinting = true;
+        GetComponent<PlayerScript>().Speed = sprintSpeed;
+    }
+    public void Slide()
+    {
+        if (GetComponent<PlayerScript>().IsSprinting)
+        {
+            GetComponent<PlayerScript>().Speed = slideSpeed;
+        }
     }
     private void Walk()
     {
-        GetComponent<PlayerMovement>().Speed = walkSpeed;
+        GetComponent<PlayerScript>().IsSprinting = true;
+        GetComponent<PlayerScript>().StandPlayerControler();
+        GetComponent<PlayerScript>().Speed = walkSpeed;
     }
     private void QuickAttack()
     {

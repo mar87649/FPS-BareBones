@@ -4,21 +4,17 @@ using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision collision)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (hit.gameObject.CompareTag("Enemy"))
         {
             //Take Damage health -= 10f;
-            float damageTaken = collision.gameObject.GetComponent<EnemyScript>().AttackDamage;
+            float damageTaken = hit.gameObject.GetComponent<EnemyScript>().AttackDamage;
             GetComponent<PlayerScript>().Takedamage(damageTaken);
         }
-        if (collision.gameObject.CompareTag("Obstacle"))
+        if (hit.gameObject.CompareTag("Floor"))
         {
-            //stop movment
-            Debug.Log("hit obstacle");
-
-            GetComponent<PlayerMovement>().StopMovement();
+            GetComponent<PlayerScript>().IsOnGround = true;
         }
-
     }
 }

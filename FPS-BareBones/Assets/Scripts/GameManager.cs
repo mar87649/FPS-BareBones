@@ -31,13 +31,14 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
     #endregion
+    private void Awake()
+    {
+        Singleton();
+
+    }
     private void Start()
     {
        SceneManager.LoadScene("Main Menu", LoadSceneMode.Additive);
-    }
-    private void Awake()
-    {
-        Singleton();        
     }
     public void StartNewGame()
     {
