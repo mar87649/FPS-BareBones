@@ -18,7 +18,8 @@ public class AbilityScript
     }
     public void Dash()
     {
-        //moves player quickly in horizontal direection
+        //moves player quickly in horizontal and vertival direection
+
     }
     public void MyMethod()
     {

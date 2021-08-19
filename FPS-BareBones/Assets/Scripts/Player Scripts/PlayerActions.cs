@@ -67,6 +67,7 @@ public class PlayerActions : MonoBehaviour
     }
     private void Crouch()
     {
+        GetComponent<PlayerScript>().IsSprinting = false;
         GetComponent<PlayerScript>().Speed = crouchSpeed;
         GetComponent<PlayerScript>().CrouchPlayerControler();
         playerObject.transform.localScale = crouchedVector;
@@ -91,7 +92,7 @@ public class PlayerActions : MonoBehaviour
     }
     private void Walk()
     {
-        GetComponent<PlayerScript>().IsSprinting = true;
+        GetComponent<PlayerScript>().IsSprinting = false;
         GetComponent<PlayerScript>().StandPlayerControler();
         GetComponent<PlayerScript>().Speed = walkSpeed;
     }
@@ -101,6 +102,7 @@ public class PlayerActions : MonoBehaviour
     }
     private void MovementAbility()
     {
+
         Debug.Log("Movement activated");
     }
     private void HealingAbility()
