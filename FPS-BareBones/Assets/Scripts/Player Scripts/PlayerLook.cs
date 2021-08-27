@@ -1,8 +1,56 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ECM.Components;
 
-public class PlayerLook : MonoBehaviour
+public class PlayerLook : MouseLook
+{
+    public override void LookRotation(CharacterMovement movement, Transform cameraTransform)
+    {
+        var yaw = InputManager.Instance.Controls.Player.MouseX.ReadValue<float>()
+            * lateralSensitivity;
+        var pitch = InputManager.Instance.Controls.Player.MouseY.ReadValue<float>()
+            * verticalSensitivity;
+
+        var yawRotation = Quaternion.Euler(0.0f, yaw, 0.0f);
+        var pitchRotation = Quaternion.Euler(-pitch, 0.0f, 0.0f);
+
+        characterTargetRotation *= yawRotation;
+        cameraTargetRotation *= pitchRotation;
+
+        if (clampPitch)
+            cameraTargetRotation = ClampPitch(cameraTargetRotation);
+
+        if (smooth)
+        {
+            // On a rotating platform, append platform rotation to target rotation
+
+            if (movement.platformUpdatesRotation && movement.isOnPlatform && movement.platformAngularVelocity != Vector3.zero)
+            {
+                characterTargetRotation *=
+                    Quaternion.Euler(movement.platformAngularVelocity * Mathf.Rad2Deg * Time.deltaTime);
+            }
+
+            movement.rotation = Quaternion.Slerp(movement.rotation, characterTargetRotation,
+                smoothTime * Time.deltaTime);
+
+            cameraTransform.localRotation = Quaternion.Slerp(cameraTransform.localRotation, cameraTargetRotation,
+                smoothTime * Time.deltaTime);
+        }
+        else
+        {
+            movement.rotation *= yawRotation;
+            cameraTransform.localRotation *= pitchRotation;
+
+            if (clampPitch)
+                cameraTransform.localRotation = ClampPitch(cameraTransform.localRotation);
+        }
+
+        UpdateCursorLock();
+    }
+
+}
+/*public class PlayerLook : MonoBehaviour
 {
     private InputAsset controls;
     private float mouseX, mouseY;
@@ -44,4 +92,4 @@ public class PlayerLook : MonoBehaviour
     {
         transform.Rotate(Vector3.up * mouseX * sensitivity * Time.deltaTime);
     }
-}
+}*/

@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-       SceneManager.LoadScene("Main Menu", LoadSceneMode.Additive);
+       //SceneManager.LoadScene("Main Menu", LoadSceneMode.Additive);
     }
     public void StartNewGame()
     {

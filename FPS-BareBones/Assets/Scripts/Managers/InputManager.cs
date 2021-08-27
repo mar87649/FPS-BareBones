@@ -6,20 +6,22 @@ public class InputManager : MonoBehaviour
 {
     private InputAsset controls;
     public static InputManager Instance { get; private set; }
+    public InputAsset Controls { get => controls; private set => controls = value; }
+
     private void Awake()
     {
         Singleton();
-        controls = new InputAsset();
+        Controls = new InputAsset();
 
-        controls.Menus.PauseMenu.performed += e => UIManager.Instance.Logic(); ;
+        Controls.Menus.PauseMenu.performed += e => UIManager.Instance.Logic(); ;
     }
     private void OnEnable()
     {
-        controls.Enable();
+        Controls.Enable();
     }
     private void OnDisable()
     {
-        controls.Disable();
+        Controls.Disable();
     }
     private void Singleton()
     {
