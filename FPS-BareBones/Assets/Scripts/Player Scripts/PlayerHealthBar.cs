@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealthBar : MonoBehaviour
+public class PlayerHealthBar : Healthbar
 {
+    [SerializeField] private GameObject player;
     private Slider slider;
-    [SerializeField]private GameObject player;
-    float playerHealth;
+    private float playerHealth;
 
     // Start is called before the first frame update
     void Start()

@@ -7,10 +7,6 @@ public class PlayerController : BaseFirstPersonController
     public override void Awake()
     {
         base.Awake();
-    }
-
-    protected override void HandleInput()
-    {
         InputManager.Instance.Controls.Player.Jump.started += e => jump = true;
         InputManager.Instance.Controls.Player.Jump.performed += e => jump = true;
         InputManager.Instance.Controls.Player.Jump.canceled += e => jump = false;
@@ -23,13 +19,17 @@ public class PlayerController : BaseFirstPersonController
         InputManager.Instance.Controls.Player.Crouch.performed += e => crouch = true;
         InputManager.Instance.Controls.Player.Crouch.canceled += e => crouch = false;
 
+        InputManager.Instance.Controls.Menus.PauseMenu.performed += e => pause = !pause;
+
+    }
+
+    protected override void HandleInput()
+    {
         moveDirection = new Vector3
         {
             x = InputManager.Instance.Controls.Player.Movement.ReadValue<Vector2>().x,
             y = 0.0f,
             z = InputManager.Instance.Controls.Player.Movement.ReadValue<Vector2>().y
         };
-
-        InputManager.Instance.Controls.Menus.PauseMenu.performed += e => pause = !pause;
     }
 }

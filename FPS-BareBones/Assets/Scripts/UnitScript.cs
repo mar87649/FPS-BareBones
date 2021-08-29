@@ -13,6 +13,8 @@ public class UnitScript : MonoBehaviour
     public float Health { get => health; set => health = value; }
     public GameObject Weapon { get => weapon; set => weapon = value; }
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
+    public Healthbar HealthBar { get => healthBar; set => healthBar = value; }
+
     private void Start()
     {
         maxHealth = health;
@@ -20,7 +22,7 @@ public class UnitScript : MonoBehaviour
     public virtual void Takedamage(float damageTaken)
     {
         Health -= damageTaken;
-        healthBar.UpdateHealthbar();
+        HealthBar.UpdateHealthbar();
         if (Health <= 0f)
         {
             Die();
