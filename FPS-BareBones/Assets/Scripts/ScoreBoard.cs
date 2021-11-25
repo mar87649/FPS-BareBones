@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class ScoreBoard : MonoBehaviour
 {
@@ -15,13 +16,29 @@ public class ScoreBoard : MonoBehaviour
         ScoreText.text = Score.ToString();
     }
 
-
-    public int UpdateScore(int amount)
+    public int SetScore(int score)
+    {
+        Score = score;
+        ScoreText.text = Score.ToString();
+        GameManager.Instance.Score = Score;
+        return Score;
+    }
+    public int IncrementScore(int amount)
     {
         Score += amount;
         ScoreText.text = Score.ToString();
         GameManager.Instance.Score = Score;
         return Score;
     }
+
+    public int ResetScore()
+    {
+        Score = 0;
+        ScoreText.text = Score.ToString();
+        GameManager.Instance.Score = Score;
+        return Score;
+    }
+
+
 
 }

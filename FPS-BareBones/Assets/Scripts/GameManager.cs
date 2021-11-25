@@ -10,16 +10,17 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
-    #region NewGameVariables
-    [SerializeField] GameObject NewGameWeapon;
-    [SerializeField] GameObject player;
-    public int Score;
+    #region Game Variables
+    [SerializeField] private GameObject player;
+    [SerializeField] private bool gameOver;
+    [SerializeField] private int score;
+    public GameObject Player { get => player; set => player = value; }
+    public bool GameOver { get => gameOver; set => gameOver = value; }
+    public int Score { get => score; set => score = value; }
 
     #endregion
     #region Singleton Pattern
     public static GameManager Instance { get; private set; }
-    public GameObject Player { get => player; set => player = value; }
-
     private void Singleton()
     {
         if (Instance != null)
@@ -34,20 +35,28 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Singleton();
-
+        Cursor.lockState = CursorLockMode.Locked;
     }
     private void Start()
     {
-       //SceneManager.LoadScene("Main Menu", LoadSceneMode.Additive);
+        Player.SetActive(false);
+        LoadManager.Instance.LoadMainMenu();
+
+
     }
     public void StartNewGame()
     {
+        Player.SetActive(true);
         LoadManager.Instance.LoadNewGame();
+        GameManager.Instance.Score = 0;
+        UIManager.Instance.ScoreBoard.GetComponent<ScoreBoard>().ResetScore();
+        StartSpawner();
     }
 
-    public void LoadFromSave()
+    public void LoadFromSave(string fileName)
     {
-        string path = Application.persistentDataPath + "/savefile.json";
+        Player.SetActive(true);
+        string path = Path.Combine(Application.persistentDataPath, fileName);
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
@@ -55,32 +64,53 @@ public class GameManager : MonoBehaviour
             string lastScene = save.LastScene;
             List<Action> functions = new List<Action>
             {
-                () => Player = LoadManager.Instance.LoadPlayer(save),
+                () => Player = LoadManager.Instance.LoadSavedPlayer(save),
                 () => Score = LoadManager.Instance.LoadScoreFromSave(save),
-                () => UIManager.Instance.ScoreBoard.GetComponent<ScoreBoard>().UpdateScore(Score)
+                () => UIManager.Instance.ScoreBoard.GetComponent<ScoreBoard>().SetScore(Score),
+                () => gameOver = false,
+                () => ResumeGame(),
+                () => StartSpawner()
             };
-            LoadManager.Instance.LoadAsyncSceneThenDo("TestScene", functions);   
-        }else
+            LoadManager.Instance.LoadAsyncSceneThenDo("TestScene", functions);
+        }
+        else
         {
             Debug.Log("No SaveFile Found.");
         }
     }
-    /// <summary>
-    /// initialize game level
-    /// </summary>
-    public void InitLevel()
+    public void StartSpawner()
     {
-        GameObject enemyPrefab = Resources.Load<GameObject>("Prefabs/Enemy");
-        GameObject spawnManager = GameObject.Find("Spawn Manager");
-        //TODO - change game object find to something more flexible. dont use strings
-        List<GameObject> spawnedList = SpawnManager.Instance.InstantiateXTimes(15, enemyPrefab);
-        foreach (GameObject item in spawnedList)
+        SpawnManager.Instance.GetComponent<SpawnEnemyScript>().SpawnEnemyRepeating();
+    }
+    public void PauseGame()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        Time.timeScale = 0;
+        if (Player.gameObject != null)
         {
-            item.name = enemyPrefab.name;
-            item.transform.parent = spawnManager.transform;
-            item.transform.position = new Vector3(Random.Range(0, 10), Random.Range(0, 10), Random.Range(0, 10));
+            Player.GetComponent<PlayerController>().enabled = false;
         }
     }
+    public void ResumeGame()
+    {
+        if (!GameOver)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Time.timeScale = 1;
+            if (Player.gameObject != null)
+            {
+                Player.GetComponent<PlayerController>().enabled = true;
+            }
+        }
+
+    }
+    public void GameOverLogic()
+    {
+        SpawnManager.Instance.GetComponent<SpawnEnemyScript>().StopAllCoroutines();
+        PauseGame();
+        UIManager.Instance.ShowGameOver();
+    }
+
 
 }
    

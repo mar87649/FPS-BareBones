@@ -47,8 +47,7 @@ public class PlayerLook : MouseLook
         }
 
         UpdateCursorLock();
-    }
-
+    }    
 }
 /*public class PlayerLook : MonoBehaviour
 {

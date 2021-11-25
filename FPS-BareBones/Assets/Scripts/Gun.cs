@@ -3,156 +3,90 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour
+public class Gun : Weapon
 {
-    [SerializeField] private float damage;
-    [SerializeField] private float range;
-    [SerializeField] private float fireRate;
     [SerializeField] private float recoil;
     [SerializeField] private int clipSize;
     [SerializeField] private float reloadSpeed;
-    [SerializeField] private GameObject povCam;
     [SerializeField] private bool automatic;
-    [SerializeField] private GameObject parent;
-    [SerializeField] private Bounds parentBounds;
+    [SerializeField] private float aimSpeed = 1f;
+
+    [SerializeField] private Vector3 hipFirePosition;
+    [SerializeField] private Vector3 adsPosition;
+
+    [SerializeField] private GameObject bullet;
 
 
     #region Variables
-    public float Damage { get => damage; set => damage = value; }
-    public float Range { get => range; set => range = value; }
-    public float FireRate { get => fireRate; set => fireRate = value; }
     public float Spread { get; set; }
     public float Recoil { get => recoil; set => recoil = value; }
     public int ClipSize { get => clipSize; set => clipSize = value; }
     public float ReloadSpeed { get => reloadSpeed; set => reloadSpeed = value; }
-    public GameObject PovCam { get => povCam; set => povCam = value; }
     public bool Automatic { get => automatic; set => automatic = value; }
-    public float PlayerFOV { get; private set; }
-    public GameObject Parent { get => parent; set => parent = value; }
+    public Vector3 HipFirePosition { get => hipFirePosition; set => hipFirePosition = value; }
+    public Vector3 AdsPosition { get => adsPosition; set => adsPosition = value; }
+    public float AimSpeed { get => aimSpeed; set => aimSpeed = value; }
+    public GameObject Bullet { get => bullet; set => bullet = value; }
+
+
 
     private float nextTimeToFire = 0f;
-    [SerializeField] private float aimSpeed = 1f;
-
-    public Vector3 hipFirePosition;// = new Vector3(1f, 0.05f, 1f);
-    public Vector3 adsPosition;// = new Vector3(0f, .15f, 1f);
     public float adsZoom = 2f;
     private bool ads = false;
+    private bool shooting = false;
     #endregion
-    private void Awake()
-    {
-        PovCam = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).GetChild(1).gameObject;
-        Parent = GameObject.FindGameObjectWithTag("Player");
-        parentBounds = Parent.transform.GetComponent<Collider>().bounds;
-        PlayerFOV = PovCam.GetComponent<Camera>().fieldOfView;
-    }
-    private void Start()
-    {
-        hipFirePosition = new Vector3(parentBounds.extents.x * 2, parentBounds.extents.y * 1f, parentBounds.extents.z * 2);
-        adsPosition = new Vector3(parentBounds.center.x, parentBounds.extents.y * 1.15f, parentBounds.extents.z * 2);
-        AimHipFire();
-    }
 
-    void Update()
+    public override void Primary()
     {
-        
-    }
-    /// <summary>
-    /// Aim down sights method.
-    /// Lerps object from hip fire position to ads position with object aimspeed;
-    /// Zooms object PovCam by adsZoom amount.
-    /// </summary>
-    private void AimDownSights()
-    {
-        transform.localPosition = Vector3.Lerp(hipFirePosition, adsPosition, aimSpeed);
-        povCam.GetComponent<Camera>().fieldOfView = PlayerFOV / adsZoom;
-    }
-    /// <summary>
-    /// Aim hip fire method.
-    /// Lerps object from ads position to hip fire position with object aim, speed;
-    ///  Zooms object PovCam to default.
-    /// </summary>
-    private void AimHipFire()
-    {
-        transform.localPosition = Vector3.Lerp(adsPosition, hipFirePosition, aimSpeed);
-        povCam.GetComponent<Camera>().fieldOfView = PlayerFOV;
-    }
-    /// <summary>
-    /// Shoot at target by using raycast.ss
-    /// Acts upon an object with the target script
-    /// </summary>
-    private void Shoot()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(PovCam.transform.position, povCam.transform.forward, out hit, Range))
-        {
-            UnitScript target = hit.transform.GetComponent<UnitScript>();            
-            if (target != null)
-            {
-                target.Takedamage(Damage);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Fire weapon based on automatic or manual
-    /// </summary>
-    /*    public void WeaponLogic()
-        {
-            if (automatic)
-            {
-                if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
-                {
-                    nextTimeToFire = Time.time + fireRate;
-                    Shoot();
-                }
-            }
-            else if (Input.GetButtonDown("Fire1"))
-            {
-                Shoot();
-            }
-        }*/
-    /*    public void WeaponLogic()
-        {
-            if (automatic)
-            {
-                if (Input.GetButtonDown("Fire1") && Time.time >= nextTimeToFire)
-                {
-                    nextTimeToFire = Time.time + fireRate;
-                    Shoot();
-                }
-            }
-            else if (Input.GetButtonDown("Fire1"))
-            {
-                Shoot();
-            }
-        }*/
-    public void WeaponLogic()
-    {
-        if (automatic)
-        {
-            if (Time.time >= nextTimeToFire)
-            {
-                nextTimeToFire = Time.time + fireRate;
-                Shoot();
-            }
-        }
-        else
+        base.Primary();
+        shooting = !shooting;
+        if (shooting && !automatic)
         {
             Shoot();
         }
     }
-
-    /*    public void AimLogic()
+    private void Update()
+    {
+        if (shooting && automatic && Time.time >= nextTimeToFire)
         {
-            if (Input.GetButton("Fire2"))
+            nextTimeToFire = Time.time + 1f / AttackRate;
+            Shoot();
+        }
+    }
+    public override void Secondary()
+    {
+        base.Secondary();
+        AimLogic();
+    }
+    public override void WeaponLogic()
+    {
+
+    }
+    public void AimDownSights()
+    {
+        transform.localPosition = Vector3.Lerp(HipFirePosition, AdsPosition, AimSpeed);
+        Parent.GetComponent<UnitScript>().ChangeFOV(FOV / adsZoom);
+        //POV.GetComponent<Camera>().fieldOfView = FOV / adsZoom;
+    }
+    public void AimHipFire()
+    {
+        transform.localPosition = Vector3.Lerp(AdsPosition, HipFirePosition, AimSpeed);
+        Parent.GetComponent<UnitScript>().ChangeFOV(FOV);
+        //POV.GetComponent<Camera>().fieldOfView = FOV;
+    }
+    public virtual void Shoot()
+    {
+        FireBullet();
+        RaycastHit hit;
+        if (Physics.Raycast(POV.transform.position, POV.transform.forward, out hit, Range))
+        {
+            UnitScript target = hit.transform.GetComponent<UnitScript>();
+            if (target != null)
             {
-                AimDownSights();
+                target.TakeDamage(Damage);
             }
-            else
-            {
-                AimHipFire();
-            }
-        }*/
+        }
+    }
     public void AimLogic()
     {
         if (!ads)
@@ -165,5 +99,16 @@ public class Gun : MonoBehaviour
             ads = false;
             AimHipFire();
         }
+    }
+    public override void SetPositions()
+    {
+        hipFirePosition = Parent.GetComponent<UnitScript>().HipFirePosition;
+        adsPosition = Parent.GetComponent<UnitScript>().AdsPosition;
+    }
+    public void FireBullet()
+    {
+        Bounds bounds = GetComponent<Collider>().bounds;
+        Instantiate(bullet, transform.position+transform.forward, transform.rotation)
+            .GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * 100, ForceMode.Impulse);
     }
 }

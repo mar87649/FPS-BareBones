@@ -112,7 +112,8 @@ namespace ECM.Walkthrough.Flying
             var currentFriction = isGrounded || isFlying ? groundFriction : airFriction;
             var currentBrakingFriction = useBrakingFriction ? brakingFriction : currentFriction;
 
-            movement.Move(desiredVelocity, speed, acceleration, deceleration, currentFriction, currentBrakingFriction, !allowVerticalMovement);
+            movement.Move(desiredVelocity, speed, acceleration, deceleration, currentFriction,
+                currentBrakingFriction, !allowVerticalMovement);
             
             // Jump logic
             

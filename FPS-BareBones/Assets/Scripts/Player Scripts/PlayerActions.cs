@@ -5,73 +5,94 @@ using UnityEngine;
 
 public class PlayerActions : MonoBehaviour
 {
-    private InputAsset.PlayerActions controls;
+    //private InputAsset.PlayerActions controls = InputManager.Instance.Controls.Player;
     private bool primaryHold;
     private void Awake()
     {
-        controls = InputManager.Instance.Controls.Player;
-        controls.QuickAttack.performed += e => QuickAttack();
-        controls.MovementAbility.performed += e => MovementAbility();
-        controls.OffenceAbility.performed += e => OffenceAbility();
-        controls.DefenceAbility.performed += e => DefenceAbility();
-        controls.HealingAbility.performed += e => HealingAbility();
-        controls.UltimateAbility.performed += e => UltimateAbility();
-        controls.Attack1.performed += e => primaryHold = true;
-        controls.Attack1.canceled += e => primaryHold = false;
-        controls.Attack2.performed += e => Attack2();
-        controls.Attack2.canceled += e => Attack2();
+        //controls = InputManager.Instance.Controls.Player;
+        InputManager.Instance.Controls.Player.QuickAttack.performed += e => QuickAttack();
+        InputManager.Instance.Controls.Player.MovementAbility.performed += e => MovementAbility();
+        InputManager.Instance.Controls.Player.OffenceAbility.performed += e => OffenceAbility();
+        //controls.DefenceAbility.performed += e => DefenceAbility();
+        InputManager.Instance.Controls.Player.HealingAbility.performed += e => HealingAbility();
+        InputManager.Instance.Controls.Player.UltimateAbility.performed += e => UltimateAbility();
+        //controls.PrimaryAction.started += e => PrimaryAction();
+        InputManager.Instance.Controls.Player.PrimaryAction.performed += e => PrimaryAction();
+        InputManager.Instance.Controls.Player.PrimaryAction.canceled += e => PrimaryAction();
+        InputManager.Instance.Controls.Player.SecondaryAction.performed += e => SecondaryAction();
+        InputManager.Instance.Controls.Player.SecondaryAction.canceled += e => SecondaryAction();
+        InputManager.Instance.Controls.Player.Interact.performed += e => Interact();
     }
-    private void OnEnable()
+    public void QuickAttack()
     {
-        controls.Enable();
-    }
-    private void OnDisable()
-    {
-        controls.Disable();
-    }
-
-    void Update()
-    {
-        if (primaryHold)
+        GameObject PovCam = gameObject.GetComponent<PlayerScript>().PointOfViewObject;
+        float Range = 1f;
+        float Damage = 5f;
+        RaycastHit hit;
+        if (Physics.Raycast(PovCam.transform.position, PovCam.transform.forward, out hit, Range))
         {
-            Attack1();
+            UnitScript target = hit.transform.GetComponent<UnitScript>();
+            if (target != null)
+            {
+                target.TakeDamage(Damage);
+            }
         }
     }
-    private void QuickAttack()
+    #region movemnt ability dash
+    public void MovementAbility()
     {
-        Debug.Log("Quick attacking");
+        GetComponent<PlayerScript>().MovementAblitity.GetComponent<Ability>().AbilityLogic();
     }
-    private void MovementAbility()
-    {
-        Debug.Log("Movement activated");
-    }
-    private void HealingAbility()
+    #endregion
+    public void HealingAbility()
     {
         Debug.Log("Healing Activated");
-
+        GetComponent<PlayerScript>().HealingAblitity.GetComponent<Ability>().AbilityLogic();
     }
-    private void DefenceAbility()
-    {
-        Debug.Log("Defence Activated");
-
-    }
-    private void OffenceAbility()
+    public void OffenceAbility()
     {
         Debug.Log("Offence Activated");
-
+        GetComponent<PlayerScript>().OffenceAblitity.GetComponent<Ability>().AbilityLogic();
     }
-    private void UltimateAbility()
+
+    #region
+    public void UltimateAbility()
     {
         Debug.Log("Using Ultimate Ability!");
+        UltimateLogic();
+    }
+    IEnumerator UltimateLogic()
+    {
+        GetComponent<PlayerScript>().HealDamage(50);
+        GetComponent<PlayerController>().SetAllSpeed(20);
+        yield return new WaitForSeconds(10);
+        GetComponent<PlayerController>().ReSetAllSpeed();
+    }
+    #endregion
+    public void Interact()
+    {
+        GameObject povCam = GameObject.FindGameObjectWithTag("PlayerCam");
+        float Range = 5;
+        if (Physics.Raycast(povCam.transform.position, povCam.transform.forward, out RaycastHit hit, Range))
+        {            
+            if (hit.transform != null && hit.transform.gameObject.CompareTag("Weapon"))
+            {
+                hit.transform.gameObject.GetComponent<Weapon>().InteractLogic();
+            }
+        }
+    }
+    public void PrimaryAction()
+    {
+        Debug.Log(GetComponent<PlayerScript>().Weapon.
+            GetComponent<Weapon>().name);
 
+        GetComponent<PlayerScript>().Weapon.
+            GetComponent<Weapon>().Primary();
     }
-    private void Attack1()
+    public void SecondaryAction()
     {
-        GetComponent<UnitScript>().Weapon.GetComponent<Weapon>().WeaponLogic();
-    }
-    private void Attack2()
-    {
-        Debug.Log("Aim down sights");
+        GetComponent<PlayerScript>().Weapon.
+            GetComponent<Weapon>().Secondary();
     }
 }
 

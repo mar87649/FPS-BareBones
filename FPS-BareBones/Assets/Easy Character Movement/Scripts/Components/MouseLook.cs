@@ -24,11 +24,13 @@ namespace ECM.Components
         private KeyCode _unlockCursorKey = KeyCode.Escape;
 
         [Tooltip("How fast the cursor moves in response to mouse lateral (x-axis) movement.")]
-        [SerializeField]
+        [SerializeField]        
+        [Range(.001f, .1f)]
         private float _lateralSensitivity = 2.0f;
 
         [Tooltip("How fast the cursor moves in response to mouse vertical (y-axis) movement.")]
         [SerializeField]
+        [Range(.001f, .1f)]
         private float _verticalSensitivity = 2.0f;
 
         [Tooltip("Should the rotation be smoothed (eg: interpolated)?")]
@@ -237,9 +239,11 @@ namespace ECM.Components
 
         protected virtual void InternalLockUpdate()
         {
-            if (Input.GetKeyUp(unlockCursorKey))
+            //if (Input.GetKeyUp(unlockCursorKey))
+            if (InputManager.Instance.Controls.Menus.PauseMenu.triggered)
                 _isCursorLocked = false;
-            else if (Input.GetMouseButtonUp(0))
+            //else if (Input.GetMouseButtonUp(0))
+            else if (InputManager.Instance.Controls.Menus.Select.triggered)
                 _isCursorLocked = true;
 
             if (_isCursorLocked)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,15 @@ public class PlayerCollision : MonoBehaviour
         {
             //Take Damage health -= 10f;
             float damageTaken = hit.gameObject.GetComponent<EnemyScript>().AttackDamage;
-            GetComponent<PlayerScript>().Takedamage(damageTaken);
+            GetComponent<PlayerScript>().TakeDamage(damageTaken);
         }
+    }
+
+/*    public void HitFloorLogic(ControllerColliderHit hit)
+    {
         if (hit.gameObject.CompareTag("Floor"))
         {
             GetComponent<PlayerScript>().IsOnGround = true;
         }
-    }
+    }*/
 }

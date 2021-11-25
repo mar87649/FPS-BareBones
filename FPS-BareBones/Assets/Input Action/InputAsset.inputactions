@@ -30,7 +30,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Attack1",
+                    "name": "PrimaryAction",
                     "type": "Button",
                     "id": "44ca752f-2f2a-4eb2-bc8e-470cd63abee3",
                     "expectedControlType": "Button",
@@ -38,7 +38,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Attack2",
+                    "name": "SecondaryAction",
                     "type": "Button",
                     "id": "785f4db4-28e6-4630-839b-98a42742b9bf",
                     "expectedControlType": "Button",
@@ -113,6 +113,14 @@
                     "name": "UltimateAbility",
                     "type": "Button",
                     "id": "d4da9d37-71e2-4760-93bf-a3c048eafd74",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "3d64774b-4f03-40ac-8810-3a49bff0dbe0",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -247,7 +255,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KBM",
-                    "action": "Attack1",
+                    "action": "PrimaryAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -258,7 +266,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KBM",
-                    "action": "Attack2",
+                    "action": "SecondaryAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -309,11 +317,22 @@
                 {
                     "name": "",
                     "id": "a2232c56-5332-4145-be44-1ff7b078e07f",
-                    "path": "<Keyboard>/capsLock",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MovementAbility",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c4a3b985-dcc9-47a0-abf5-d28b5318b12d",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "KBM",
-                    "action": "MovementAbility",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -330,6 +349,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "767a2194-4e7f-4f47-aa4c-da3f0517367b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -341,6 +368,17 @@
                     "processors": "",
                     "groups": "KBM",
                     "action": "PauseMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5f00936c-c726-4c7c-8975-895e3593dc0e",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Select",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

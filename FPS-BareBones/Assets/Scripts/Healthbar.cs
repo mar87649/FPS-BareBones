@@ -22,6 +22,8 @@ public class Healthbar : MonoBehaviour
     public virtual void UpdateHealthbar()
     {
         unitHealth = unit.GetComponent<UnitScript>().Health;
+        Debug.Log(slider.value);
+
         slider.value = unitHealth;        
     }
 }

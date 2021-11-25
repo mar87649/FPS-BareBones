@@ -20,36 +20,35 @@ public class UIManager : MonoBehaviour
     {
         Singleton();
         state = State.Inacttive;
+        Cursor.lockState = CursorLockMode.Confined;
+
     }
 
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject optionsMenu;
     [SerializeField] private GameObject killFeed;
     [SerializeField] private GameObject scoreBoard;
+    [SerializeField] private GameObject gameOverScreen;
+
 
     public GameObject PauseMenu { get => pauseMenu; private set => pauseMenu = value; }
     public GameObject OptionsMenu { get => optionsMenu; private set => optionsMenu = value; }
     public GameObject KillFeed { get => killFeed; set => killFeed = value; }
     public GameObject ScoreBoard { get => scoreBoard; set => scoreBoard = value; }
-
-  
+    public GameObject GameOverScreen { get => gameOverScreen; set => gameOverScreen = value; }
 
     private enum State { MainMenu, GameMenu, OptionsMenu, Inacttive }
-
     private State state;
     private State previousState;
 
-
     public void PauseGame()
     {
-        Time.timeScale = 0;
+        GameManager.Instance.PauseGame();
     }
-
     public void ResumeGame()
     {
-        Time.timeScale = 1;
+        GameManager.Instance.ResumeGame();
     }
-
     public void OpenGameMenu()
     {
         previousState = state;
@@ -58,12 +57,16 @@ public class UIManager : MonoBehaviour
     }
     public void CloseGameMenu()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+
         previousState = State.Inacttive;
         state = State.Inacttive;
         pauseMenu.SetActive(false);
     }
     public void OpenOptions()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+
         previousState = state;
         state = State.OptionsMenu;
         PauseMenu.SetActive(false);
@@ -71,10 +74,25 @@ public class UIManager : MonoBehaviour
     }
     public void CloseOptions()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+
         previousState = state;
         state = previousState;
         OptionsMenu.SetActive(false);
         PauseMenu.SetActive(true);
+    }
+
+    public void ShowGameOver()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+ 
+        gameOverScreen.SetActive(true);
+    }
+    public void HideGameOver()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+
+        gameOverScreen.SetActive(false);
     }
 
     public void Logic()
@@ -95,7 +113,6 @@ public class UIManager : MonoBehaviour
             CloseOptions();
             OpenGameMenu();
         }
-        Debug.Log(state);
     }
 
 }

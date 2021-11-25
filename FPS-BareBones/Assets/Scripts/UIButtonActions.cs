@@ -20,13 +20,15 @@ public class UIButtonActions : MonoBehaviour
     }
     public void SaveGame()
     {
-        SaveManager.Instance.SaveGameData();
+        SaveManager.Instance.WriteNewSaveData("savefile.json");
     }
     public void LoadGame()
     {
+        GameManager.Instance.LoadFromSave("savefile.json");
         UIManager.Instance.CloseGameMenu();
         UIManager.Instance.ResumeGame();
-        GameManager.Instance.LoadFromSave();
+        //TODO - make dynamic
+        
     }
     public void Options()
     {
@@ -38,6 +40,8 @@ public class UIButtonActions : MonoBehaviour
     }
     public void Restart()
     {
-        //restart from last save
+        SceneManager.UnloadSceneAsync("TestScene");
+        GameManager.Instance.StartNewGame();
+        UIManager.Instance.HideGameOver();
     }
 }

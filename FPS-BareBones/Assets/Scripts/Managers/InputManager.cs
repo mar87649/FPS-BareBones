@@ -12,8 +12,6 @@ public class InputManager : MonoBehaviour
     {
         Singleton();
         Controls = new InputAsset();
-        Debug.Log("controller initiated");
-
         Controls.Menus.PauseMenu.performed += e => UIManager.Instance.Logic();
     }
     private void OnEnable()
